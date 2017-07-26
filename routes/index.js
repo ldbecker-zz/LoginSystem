@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
-var models = require('../models');
+var passport = require('passport');
+const models = require('../models');
+var cel = require('connect-ensure-login');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -12,7 +14,6 @@ router.get('/register', function(req, res, next) {
 })
 
 router.post('/register', function(req, res, next) {
-	console.log(req.body.type);
 	//todo: no duplicate usernames
 	models.Users.create({
 		username: req.body.username,
@@ -25,8 +26,24 @@ router.post('/register', function(req, res, next) {
 	});
 })
 
-router.post('/login', function(req, res, next) {
-	//todo
+router.post('/login', passport.authenticate('local', {failureRedirect: '/'}),
+ 	function(req, res, next) {
+	res.redirect('/profile');
 });
+
+router.get('/profile',
+  cel.ensureLoggedIn(),
+  function(req, res){
+  	//console.log(req);
+  	//console.log(req.session.passport.user);
+    res.render('index', { title: 'Profile for: ' + req.session.passport.user });
+  });
+
+router.get('/logout',
+  function(req, res){
+    req.logout();
+    res.redirect('/');
+  });
+
 
 module.exports = router;

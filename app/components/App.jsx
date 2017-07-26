@@ -12,11 +12,11 @@ class App extends React.Component {
 
     };
 
-    this.regSubmit = this.regSubmit.bind(this);
+    this.loginSubmit = this.loginSubmit.bind(this);
   }
 
-  regSubmit(e) {
-    if(document.getElementById('regUser').value === '' || document.getElementById('regPass').value === '') {
+  loginSubmit(e) {
+    if(document.getElementById('loginUser').value === '' || document.getElementById('loginPass').value === '') {
       alert('Please enter a username and password');
       e.preventDefault();
       return false;
@@ -26,13 +26,9 @@ class App extends React.Component {
   render() {
     return (
         <div>
-          <form onSubmit={this.regSubmit} action="/register" method="post">
-            <input id="regUser" type="text" name="username"></input>
-            <input id="regPass" type="text" name="password"></input><br/>
-            Are you an admin? (Be honest!)<select name="type">
-              <option value={true}>Yes</option>
-              <option value={false}>No</option>
-            </select>
+          <form onSubmit={this.loginSubmit} action="/login" method="post">
+            <input id="loginUser" type="text" name="username"></input>
+            <input id="loginPass" type="text" name="password"></input><br/>
             <button type="submit">Submit</button>
           </form><br/><br/> 
           <a href="/register">Need to Register? Click here!</a>     

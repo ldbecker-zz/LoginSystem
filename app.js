@@ -5,7 +5,8 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var models = require('./models');
-
+var passport = require('passport');
+var Strategy = require('passport-local').Strategy;
 var index = require('./routes/index');
 
 var app = express();
@@ -21,6 +22,44 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+passport.use(new Strategy(
+  function(username, password, cb) {
+  	console.log('user', username);
+    models.Users.findOne({
+    	where: {
+    		username: username
+    	}
+    }).then(function(resp) {
+    	//todo encrypt
+    	console.log('suc', resp.password, resp);
+    	if(resp.password !== password) return cb(null, false);
+    	return cb(null, resp)
+    	cb 
+    }).catch(function(resp) {
+    	console.log('fail', resp);
+    	return cb (null , false);
+    });
+  }));
+
+passport.serializeUser(function(user, cb) {
+  cb(null, user.id);
+});
+
+passport.deserializeUser(function(id, cb) {
+  models.Users.findOne({
+  	id: id
+  }).then(function(resp) {
+  	return cb(null, resp);
+  }).catch(function(resp) {
+  	console.log('deserialize failed');
+  	return cb(resp, null);
+  });
+});
+
+app.use(require('express-session')({ secret: 'averygoodsecret', resave: false, saveUninitialized: false }));
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use('/', index);
 
