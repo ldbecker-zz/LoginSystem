@@ -2,6 +2,8 @@ const React = require('react');
 const ReactDOM = require('react-dom');
 const axios = require('axios');
 const Register = require('./Register.jsx');
+const Profile = require('./Profile.jsx');
+
 import { Router, Route, browserHistory } from 'react-router';
 
 class App extends React.Component {
@@ -40,4 +42,5 @@ class App extends React.Component {
 ReactDOM.render(<Router history={browserHistory}>
     <Route path="/" component={App}></Route>
     <Route path='/register' component={Register}></Route>
+    <Route path='/profile' component={Profile}></Route>
   </Router>, document.getElementById('app'));

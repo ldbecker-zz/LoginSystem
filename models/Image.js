@@ -4,7 +4,8 @@ module.exports = function(sequelize, DataTypes) {
     id: {type: DataTypes.INTEGER, primaryKey: true}, 
     username: DataTypes.STRING,
     password: DataTypes.STRING,
-    accountType: DataTypes.STRING
+    accountType: DataTypes.STRING,
+    salt: DataTypes.STRING,
   }, {
     timestamps: false,
     classMethods: {

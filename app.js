@@ -8,6 +8,7 @@ var models = require('./models');
 var passport = require('passport');
 var Strategy = require('passport-local').Strategy;
 var index = require('./routes/index');
+var bcrypt = require('bcrypt');
 
 var app = express();
 
@@ -32,10 +33,10 @@ passport.use(new Strategy(
     	}
     }).then(function(resp) {
     	//todo encrypt
-    	console.log('suc', resp.password, resp);
-    	if(resp.password !== password) return cb(null, false);
+    	var salt = resp.salt;
+    	var comp = bcrypt.compareSync(password, resp.password);
+    	if(!comp) return cb(null, false);
     	return cb(null, resp)
-    	cb 
     }).catch(function(resp) {
     	console.log('fail', resp);
     	return cb (null , false);
